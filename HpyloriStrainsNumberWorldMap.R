@@ -27,7 +27,6 @@ data$Group <- as.numeric(data$Group)
 data$long <- as.numeric(data$long)
 data$lat <- as.numeric(data$lat)
 data$NumberofIsolate <-as.numeric(data$NumberofIsolate)
-data$Colors <-as.numeric(data$Colors)
 
 #Graph the map
 g <- data %>%
