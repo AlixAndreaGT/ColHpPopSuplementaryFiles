@@ -1,4 +1,4 @@
-Helicobacter pylori strains World Map analysis 
+#Helicobacter pylori strains World Map analysis 
 
 This script will help you to visualising and analysing quantitative and spatial data about Helicobacter pylori strains included in this analysis in a world map, using some R software's libraries. 
 
