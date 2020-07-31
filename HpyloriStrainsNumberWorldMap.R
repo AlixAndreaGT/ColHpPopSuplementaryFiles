@@ -35,7 +35,7 @@ g <- data %>%
   ggplot() +
   geom_polygon(data = world, aes(x=long, y =lat, group=group), fill="lightgrey", color="white",alpha=1) +
   theme_void() +
-  geom_point( aes(x=long, y=lat, size=NumberofIsolate, colour=Colors)) +
+  geom_point( aes(x=long, y=lat, size=NumberofIsolate, colour=Group)) +
   scale_color_viridis_c (option = "plasma", name="", trans="log",alpha=0.5) + 
   scale_size_continuous(name="Number of Isolates",range=c(1,10)) + 
   theme_void() +
