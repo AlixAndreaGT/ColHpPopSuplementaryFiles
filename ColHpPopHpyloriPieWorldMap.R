@@ -44,7 +44,7 @@ g <- data %>%
   mutate( name=factor(Country, unique(Country))) %>% 
   ggplot() +
   geom_polygon(data = world, aes(x=long, y =lat, group=group), fill="lightgrey", color="white",alpha=1) +
-  geom_scatterpie(aes(x=long, y=lat, group= Country), data = data, cols = colnames(data[,c(7:33)]))+
+  geom_scatterpie(aes(x=long, y=lat, group= Country), data = data, cols = colnames(data[,c(7:33)]), legend_name = "Population")+
   scale_color_viridis_c (option = "plasma", name="", trans="log",alpha=0.5) + 
   geom_text(aes(x=long, y=lat, group = Country, label = Country), data = data, stat = "identity",
             position = position_dodge(width = 0.75), hjust = 1.5, vjust = -2, size = 3,
