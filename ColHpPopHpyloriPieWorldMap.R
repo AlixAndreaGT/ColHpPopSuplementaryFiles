@@ -1,64 +1,76 @@
-############################################################################
+####################################################################################################################################################################
 #
-#                          H.pylori Phylogenomic Analysis Map
+#                                                              H.pylori Phylogenomic Analysis Map
 #
-############################################################################
+###################################################################################################################################################################
 
-  
+
 # Load libraries
-rm(list=ls())
-library(memisc)
-library(assertthat)
-library(sqldf)
 library(magrittr)
+library(tidyr)
 library(dplyr)
-library(reshape2)
+library(purrr)
 library(ggplot2)
-library(oz)
 library(scatterpie)
-library(rgdal)
-library(maptools)
 library(maps)
-library(viridis)
 
-# Check all available geospatial objects:
-# help(package='maps')
 
 # Map of the world:
-world <- map('world',col="grey", fill=TRUE, bg="white", lwd=0.05, mar=rep(0,4),border=0, ylim=c(-80,80))
+world <- map('world',col="grey", fill=TRUE, bg="white", lwd=0.3, mar=rep(0,4), border=0, ylim=c(-60,80))
 
 #Load your dataset
 data <-read.csv(file.choose())
 head(data)
-str(data$Country)
+str(data)
 
 #Convert several columns to the kind of variable that you need
-data[,c(1:3)] <- lapply(data[,c(1:3)], as.character)
-data$Group <- as.numeric(data$Group)
-data[,c(4:33)] <- lapply(data[,c(4:33)], as.numeric)
-class(data$hpAfrica1)
+Data1 <- data%>%
+  map_if(is.factor, as.character)
+
+str(Data1)
+
+#if you want to convert only some columns, for example since 2 to the last, use:
+#Data1 <- lapply (data[,c(2:length(data))], as.character)
+
+#Prepare your data
+Data1 <- data.frame(data) %>%
+  group_by(Country,Assignedpopulation, value) %>%
+  summarize(Count = sum(value))
+
+str(Data1)
+
+#Separate the variable AssignedPopulation into columns
+tablaconvertida <-Data1%>%
+  spread(Assignedpopulation, Count)
+
+#Replace the na with Cero
+tablaconvertida[is.na(tablaconvertida)] <-0
+
+#Create a new Column with the total of Isolates by Country
+tablaconvertida$NumberofIsolates <- rowSums(tablaconvertida[2:26])
+
+# Load the coordinates of each country
+Country_Coords <- read.csv(file.choose())
+
+#Combining tables into a Finaldataset
+Finaldata <- merge(x=tablaconvertida, y=Country_Coords[ , c(2:4)], by = "Country")
+str(Finaldata)
+
 
 #graph the map
-g <- data %>%
-  arrange(NumberofIsolate) %>% 
-  mutate( name=factor(Country, unique(Country))) %>% 
-  ggplot() +
+g <- ggplot() +
   geom_polygon(data = world, aes(x=long, y =lat, group=group), fill="lightgrey", color="white",alpha=1) +
-  geom_scatterpie(aes(x=long, y=lat, group= Country), data = data, cols = colnames(data[,c(7:33)]), legend_name = "Population")+
-  geom_scatterpie_legend(data$NumberofIsolate/10, x=-200, y=-50, n=3) +
-  scale_color_viridis_c (option = "plasma", name="", trans="log",alpha=0.5) + 
-  geom_text(aes(x=long, y=lat, group = Country, label = Country), data = data, stat = "identity",
-            position = position_dodge(width = 0.75), hjust = 1.5, vjust = -2, size = 3,
-            check_overlap = FALSE, na.rm = FALSE, show.legend = NA, 
-            inherit.aes = TRUE) +
+  geom_scatterpie(aes(x=longitude, y=latitude, group= Country, r= log(NumberofIsolates*12)), data = Finaldata, cols = colnames(Finaldata[,c(3:26)]), 
+                  position= position_jitter(width = NULL, height = NULL, seed = NA), legend_name = "Population")+
   theme(legend.position = "right") +
   coord_equal() +
   theme_void() 
-  
 
 # Print the map
 print(g)
 
+
 #Para guardar el grafico
 ggsave("~/Documents/PieWorldMap.pdf")
 ggsave("~/Documents/PieWorldMap.jpeg")
+
