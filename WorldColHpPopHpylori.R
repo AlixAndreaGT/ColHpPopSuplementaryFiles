@@ -69,21 +69,21 @@ g <- ggplot() +
   geom_scatterpie_legend((Finaldata$NumberofIsolates/12), x=-160, y=-55, n=5) +
   scale_fill_manual(values= c(hpAfrica2= "#000000",
                               hpAsia2= "#FFD966",
-                              hspAfrica1MiscAmerica= "#00FFFF",
+                              hspAfrica1MiscAmerica= "#C59900",
                               hspAfrica1NAmerica= "#B08958",
                               hspAfrica1Nicaragua= "#C1A98A",
-                              hspAfrica1SAfrica= "#7F7F7F",
-                              hspAfrica1WAfrica= "#D9D9D9",
-                              hspEAsia= "#ED7D31",
+                              hspAfrica1SAfrica= "#D9D9D9",
+                              hspAfrica1WAfrica= "#7F7F7F",
+                              hspEAsia= "#F4A460",
                               hspIndigenousNAmerica= "#7b4ba0",
                               hspNEurope= "#E662C5",
                               hspIndigenousSAmerica= "#aa8ac3",
                               hspSEurope= "#FFACDF",
-                              hspSWEurope= "#AFEEEE",
+                              hspSWEurope= "#FFBBFF",
                               hspSWEuropeColombia= "#DBF1FF",
-                              hspSWEuropeHonduras= "#0096FF",
-                              hspSWEuropeMexico= "#556B2F",
-                              Unk= "#696969")) +
+                              hspSWEuropeHonduras= "#7EC0EE",
+                              hspSWEuropeMexico= "#0096FF",
+                              Unk= "#7FFFD4")) +
   theme(
     legend.position = "right",
     legend.title = element_text(color = "black"))+
